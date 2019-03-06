@@ -14,8 +14,6 @@ from sklearn.preprocessing import MinMaxScaler
 # get titanic & test csv files as a DataFrame
 SCRIPT_PATH = os.path.dirname(os.path.abspath( __file__ ))
 train_df = pd.read_csv(SCRIPT_PATH + "/train.csv")
-
-SCRIPT_PATH = os.path.dirname(os.path.abspath( __file__ ))
 test_df = pd.read_csv(SCRIPT_PATH + "/test.csv")
 dd = test_df['day']
 testHour = test_df['hour']
@@ -52,12 +50,6 @@ train_df = train_df.drop(['day'], axis=1)
 test_df = test_df.drop(['day'], axis=1)
 combine = [train_df, test_df]
 scaler = MinMaxScaler()
-
-#for dataset in combine:    
-#    dataset.loc[(dataset['hour'] > 21) & (dataset['hour'] <= 6), 'hour'] = 1
-#    dataset.loc[(dataset['hour'] > 6) & (dataset['hour'] <= 10), 'hour'] = 2
-#    dataset.loc[(dataset['hour'] > 11) & (dataset['hour'] <= 17), 'hour'] = 3
-#    dataset.loc[(dataset['hour'] > 17) & (dataset['hour'] <= 21), 'hour'] = 4
     
 for dataset in combine:
     dataset['wind'] = 0
@@ -72,9 +64,7 @@ combine = [train_df, test_df]
 
 X_train = train_df.drop("pm2.5", axis=1)
 Y_train = train_df["pm2.5"]
-X_train = MinMaxScaler().fit_transform(X_train)
-X_test  = test_df.copy()
-X_test = MinMaxScaler().fit_transform(X_test)
+X_train = scaler.fit_transform(X_train)
 dim = train_df.shape
 
 #Session
@@ -104,6 +94,8 @@ with sess.as_default():
     #print(tess.eval({x:batch_xt}))
     #accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
     #print(accuracy.eval({x:train_x, y_:train_y_}))
+    X_test = test_df.copy()
+    X_test = scaler.transform(X_test)
     Y_pred = sess.run(y, feed_dict={x:X_test})
     Y_pred = Y_pred.reshape([Y_pred.shape[0]])
     result = pd.DataFrame({

@@ -26,8 +26,6 @@ from sklearn.pipeline import make_pipeline
 # get titanic & test csv files as a DataFrame
 SCRIPT_PATH = os.path.dirname(os.path.abspath( __file__ ))
 train_df = pd.read_csv(SCRIPT_PATH + "/train.csv")
-
-SCRIPT_PATH = os.path.dirname(os.path.abspath( __file__ ))
 test_df = pd.read_csv(SCRIPT_PATH + "/test.csv")
 dd = test_df['day']
 combine = [train_df, test_df]
@@ -38,12 +36,9 @@ train_df['month'] = train_df['day']
 train_df['date'] = train_df['day']
 for i in range(train_df.shape[0]):
     year,month,day = (train_df['day'][i]).split("/")
-    month = int(month)
-    year = int(year)
-    day = int(day)
-    train_df.at[i,'year'] = year
-    train_df.at[i,'month'] = month
-    train_df.at[i,'date'] = day
+    train_df.at[i,'year'] = int(year)
+    train_df.at[i,'month'] = int(month)
+    train_df.at[i,'date'] = int(day)
 
 test_df['year'] = test_df['day']
 test_df['month'] = test_df['day']
@@ -61,12 +56,6 @@ train_df = train_df.drop(['day'], axis=1)
 test_df = test_df.drop(['day'], axis=1)
 combine = [train_df, test_df]
 scaler = MinMaxScaler(feature_range=(0,1))
-
-#for dataset in combine:    
-#    dataset.loc[(dataset['hour'] > 21) & (dataset['hour'] <= 6), 'hour'] = 1
-#    dataset.loc[(dataset['hour'] > 6) & (dataset['hour'] <= 10), 'hour'] = 2
-#    dataset.loc[(dataset['hour'] > 11) & (dataset['hour'] <= 17), 'hour'] = 3
-#    dataset.loc[(dataset['hour'] > 17) & (dataset['hour'] <= 21), 'hour'] = 4
     
 for dataset in combine:
     dataset['wind'] = 0
